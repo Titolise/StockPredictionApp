@@ -7,13 +7,13 @@ import tensorflow as tf
 import datetime
 
 #----- Title -----
-st.title('Stock :orange[Trend Prediction] App')
+st.title('Stock :orange[Trend Prediction] App 📈' )
 st.divider()
 
 #----- Sidebar -----
 #Sidebar - Ticker Input
 col1 = st.sidebar.header('Enter :red[Stock Ticker]: ')
-user_input = st.sidebar.text_input('(e.g., AAPL)','AAPL').upper()
+user_input = st.sidebar.text_input('(e.g. AAPL)','AAPL').upper()
 
 #Sidebar - Star day Input
 st.sidebar.header('Enter :red[Start Date]: ')
@@ -31,29 +31,37 @@ st.write(df.describe().transpose())
 st.divider()
 
 #----- Visualizations -----
-st.subheader('Closing Price vs Time Chart')
-fig = plt.figure(figsize=(12,6))
-plt.plot(df['Close'])
-st.pyplot(fig)
+st.subheader('Basic Graph')
+
+left, middle, right = st.columns(3)
+
+if left.button("Basic",icon= '😊', use_container_width=True):
+    left.markdown('Closing Price vs Time Chart')
+    fig = plt.figure(figsize=(12,6))
+    plt.plot(df['Close'])
+    st.pyplot(fig)
+
+if middle.button("Medium", icon="😃", use_container_width=True):
+    middle.markdown('Closing Price vs Time Chart with 100MA')
+    ma100 = df['Close'].rolling(100).mean()
+    fig = plt.figure(figsize=(12, 6))
+    plt.plot(ma100)
+    plt.plot(df['Close'])
+    st.pyplot(fig)
+
+if right.button("Hard", icon="😎", use_container_width=True):
+    right.markdown('Closing Price vs Time Chart with 100MA & 200MA')
+    ma100 = df['Close'].rolling(100).mean()
+    ma200 = df['Close'].rolling(200).mean()
+    fig = plt.figure(figsize=(12, 6))
+    plt.plot(ma100, 'r')
+    plt.plot(ma200, 'g')
+    plt.plot(df['Close'], 'b')
+    st.pyplot(fig)
+
 st.divider()
 
-st.subheader('Closing Price vs Time Chart with 100MA')
-ma100 = df['Close'].rolling(100).mean()
-fig = plt.figure(figsize=(12,6))
-plt.plot(ma100)
-plt.plot(df['Close'])
-st.pyplot(fig)
-st.divider()
-
-st.subheader('Closing Price vs Time Chart with 100MA & 200MA')
-ma100 = df['Close'].rolling(100).mean()
-ma200 = df['Close'].rolling(200).mean()
-fig = plt.figure(figsize=(12,6))
-plt.plot(ma100, 'r')
-plt.plot(ma200, 'g')
-plt.plot(df['Close'], 'b')
-st.pyplot(fig)
-st.divider()
+#----- Model -----
 
 # Splitting Data
 data_training = pd.DataFrame(df['Close'][:int(len(df)*0.7)])
@@ -98,12 +106,18 @@ y_pred = y_pred*scaler_factor
 y_test = y_test*scaler_factor
 
 
-#Final Graph
-st.subheader('Actual vs Predicted Price')
-fig2 = plt.figure(figsize=(12,6))
-plt.plot(y_test,'b', label = 'Actual Price')
-plt.plot(y_pred,'r', label = 'Predicted Price')
-plt.ylabel('Price')
-plt.xlabel('Days')
-plt.legend()
-st.pyplot(fig2)
+#----- Final Graph -----
+st.subheader('Prediction Graph')
+
+if st.button("Predict",icon= '🕵️',use_container_width=True, type="primary"):
+    st.subheader('Actual vs Predicted Price')
+    fig2 = plt.figure(figsize=(12,6))
+    plt.plot(y_test,'b', label = 'Actual Price')
+    plt.plot(y_pred,'r', label = 'Predicted Price')
+    plt.ylabel('Price')
+    plt.xlabel('Days')
+    plt.legend()
+    st.pyplot(fig2)
+
+
+
