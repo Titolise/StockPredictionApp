@@ -22,7 +22,7 @@ end = datetime.date.today().strftime("%Y-%m-%d") #Set today as the final day
 
 df = yf.download(user_input, start, end)
 
-st.sidebar.write('Data Source: Yahoo Finance')
+st.sidebar.write('Data Source: :violet[ Yahoo Finance]')
 st.sidebar.write('Data range: ', start, ' to ', end)
 
 #Describing Data
