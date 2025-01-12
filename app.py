@@ -4,24 +4,38 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 import streamlit as st
 import tensorflow as tf
+import datetime
 
-start = '2010-01-01'
-end = '2024-12-31'
+#----- Title -----
+st.title('Stock :orange[Trend Prediction] App')
+st.divider()
 
-st.title('Stock Trend Prediction App')
+#----- Sidebar -----
+#Sidebar - Ticker Input
+col1 = st.sidebar.header('Enter :red[Stock Ticker]: ')
+user_input = st.sidebar.text_input('(e.g., AAPL)','AAPL').upper()
 
-user_input = st.text_input('Enter Stock Ticker (e.g., AAPL)','AAPL').upper()
+#Sidebar - Star day Input
+st.sidebar.header('Enter :red[Start Date]: ')
+start = st.sidebar.date_input('Start Date', datetime.date(2010, 1, 1))
+end = datetime.date.today().strftime("%Y-%m-%d") #Set today as the final day
+
 df = yf.download(user_input, start, end)
 
-#Describing Data
-st.subheader(f'Data of {user_input} form 2010 to 2024')
-st.write(df.describe())
+st.sidebar.write('Data Source: Yahoo Finance')
+st.sidebar.write('Data range: ', start, ' to ', end)
 
-#Visualizations
+#Describing Data
+st.subheader(f'Data of :orange[{user_input}]')
+st.write(df.describe().transpose())
+st.divider()
+
+#----- Visualizations -----
 st.subheader('Closing Price vs Time Chart')
 fig = plt.figure(figsize=(12,6))
 plt.plot(df['Close'])
 st.pyplot(fig)
+st.divider()
 
 st.subheader('Closing Price vs Time Chart with 100MA')
 ma100 = df['Close'].rolling(100).mean()
@@ -29,7 +43,7 @@ fig = plt.figure(figsize=(12,6))
 plt.plot(ma100)
 plt.plot(df['Close'])
 st.pyplot(fig)
-
+st.divider()
 
 st.subheader('Closing Price vs Time Chart with 100MA & 200MA')
 ma100 = df['Close'].rolling(100).mean()
@@ -39,6 +53,7 @@ plt.plot(ma100, 'r')
 plt.plot(ma200, 'g')
 plt.plot(df['Close'], 'b')
 st.pyplot(fig)
+st.divider()
 
 # Splitting Data
 data_training = pd.DataFrame(df['Close'][:int(len(df)*0.7)])
@@ -84,7 +99,6 @@ y_test = y_test*scaler_factor
 
 
 #Final Graph
-
 st.subheader('Actual vs Predicted Price')
 fig2 = plt.figure(figsize=(12,6))
 plt.plot(y_test,'b', label = 'Actual Price')
@@ -93,6 +107,3 @@ plt.ylabel('Price')
 plt.xlabel('Days')
 plt.legend()
 st.pyplot(fig2)
-
-
-tf.compat.v1.reset_default_graph()
