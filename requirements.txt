@@ -4,4 +4,4 @@ streamlit
 yfinance
 tensorflow
 datetime
-
+matplotlib
