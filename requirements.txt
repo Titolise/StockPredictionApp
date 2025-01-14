@@ -2,7 +2,6 @@ pandas
 plotly
 streamlit
 yfinance
-matplotlib.pyplot
 tensorflow
 datetime
 
