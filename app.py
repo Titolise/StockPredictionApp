@@ -22,10 +22,12 @@ end = datetime.date.today().strftime("%Y-%m-%d") #Set today as the final day
 
 df = yf.download(user_input, start, end)
 
-st.sidebar.write('Data Source: :violet[ Yahoo Finance]')
 st.sidebar.write('Data range: ', start, ' to ', end)
 
-#Describing Data
+st.sidebar.write('Data Source: :violet[ Yahoo Finance]')
+
+
+#----- Describing Data -----
 st.subheader(f'Data of :orange[{user_input}]')
 st.write(df.describe().transpose())
 st.divider()
